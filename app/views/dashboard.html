@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Bem-vindo - CMS Mídia</title>
+</head>
+<body>
+    <h1>Bem-vindo, {{ username }}!</h1>
+    <p>Seu sistema de gerenciamento de livros, filmes e séries está pronto para ser construído.</p>
+    
+    <a href="{{ url_for('auth.logout') }}">
+        <button>Sair</button>
+    </a>
+</body>
+</html>

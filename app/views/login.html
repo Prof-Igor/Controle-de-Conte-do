@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - CMS Mídia</title>
+</head>
+<body>
+    <h2>Acesso ao Sistema</h2>
+    
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul style="color: red;">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('auth.login') }}">
+        <div>
+            <label for="username">Usuário:</label>
+            <input type="text" name="username" id="username" required>
+        </div>
+        <br>
+        <div>
+            <label for="password">Senha:</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <br>
+        <button type="submit">Entrar</button>
+    </form>
+</body>
+</html>
