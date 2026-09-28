@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
-from app.models import authenticate_user
+from app.models import User
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -13,7 +13,7 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        if authenticate_user(username, password):
+        if User.authenticate(username, password):
             session['user'] = username
             return redirect(url_for('main.home'))
         else:

@@ -1,17 +1,27 @@
-from werkzeug.security import generate_password_hash, check_password_hash
+from ..db import get_db_connection
+from werkzeug.security import check_password_hash
 
-# Simulando um banco de dados com as senhas protegidas por hash
-USERS = {
-    'igor': generate_password_hash('senha123'),
-    'admin': generate_password_hash('admin123')
-}
-
-def authenticate_user(username, password):
-    """Verifica se o usuário existe e compara a senha em texto plano com o hash salvo."""
-    user_hash = USERS.get(username)
-    
-    # check_password_hash faz a validação criptográfica segura
-    if user_hash and check_password_hash(user_hash, password):
-        return True
+class User:
+    @staticmethod
+    def authenticate(username, password):
+        """Abre a conexão, valida o usuário via SQL puro e fecha o banco."""
+        # 1. Solicita uma nova conexão explícita
+        conn = get_db_connection()
+        cursor = conn.cursor()
         
-    return False
+        try:
+            # 2. Executa a query com prevenção a SQL Injection (?)
+            cursor.execute(
+                'SELECT password_hash FROM users WHERE username = ?', (username,)
+            )
+            user = cursor.fetchone()
+            
+            # 3. Valida a senha se o usuário existir
+            if user and check_password_hash(user['password_hash'], password):
+                return True
+                
+            return False
+            
+        finally:
+            # 4. Garante que a conexão seja fechada, mesmo se der erro no meio do caminho
+            conn.close()
